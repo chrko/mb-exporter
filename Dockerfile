@@ -1,10 +1,15 @@
 FROM python:3.9-buster
 
-WORKDIR /usr/src/app
+RUN useradd -ms /bin/bash -d /mb-exporter -u 8999 -U mb-exporter
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /mb-exporter
 
-COPY . .
+COPY requirements.txt /mb-exporter/src/
+RUN pip3 install -U pip setuptools wheel && \
+    pip3 install --no-cache-dir -r /mb-exporter/src/requirements.txt
 
-CMD [ "python", "./main.py" ]
+COPY . /mb-exporter/src
+
+USER mb-exporter
+
+CMD [ "python", "/mb-exporter/src/main.py" ]
