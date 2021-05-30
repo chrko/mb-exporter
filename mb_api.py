@@ -105,21 +105,33 @@ class MbCustomer(OAuth2Session):
         return await self.request_async('DELETE', url, **kwargs)
 
 
+def _kilometers_to_meters(val):
+    return float(val) * 1000
+
+
+def _text_to_bool(val: str):
+    return json.loads(val.lower())
+
+
+def _text_to_bool_not(val: str):
+    return not json.loads(val.lower())
+
+
 class MbPromResRepr(Enum):
     STATE_OF_CHARGE = ("soc", "mb_electric_state_of_charge", "State of Charge obtained from electric vehicle api")
-    ELECTRIC_RANGE = ("rangeelectric", "mb_electric_range", "Electric range in kilometers", "meters", lambda v: float(v) * 1000)
+    ELECTRIC_RANGE = ("rangeelectric", "mb_electric_range", "Electric range in kilometers", "meters", _kilometers_to_meters)
 
     LIQUID_FUEL_LEVEL = ("tanklevelpercent", "mb_liquid_fuel_level", "Liquid fuel level")
-    LIQUID_RANGE = ("rangeliquid", "mb_liquid_range", "Liquid range", "meters", lambda v: float(v) * 1000)
+    LIQUID_RANGE = ("rangeliquid", "mb_liquid_range", "Liquid range", "meters", _kilometers_to_meters)
 
-    ODOMETER = ("odo", "mb_odometer", "Odometer", "meters", lambda v: float(v) * 1000)
+    ODOMETER = ("odo", "mb_odometer", "Odometer", "meters", _kilometers_to_meters)
 
     DECK_LID_LOCK_STATUS = (
         "doorlockstatusdecklid",
         "mb_deck_lid_lock_status",
         "Deck lid (Kofferraum) lock status",
         None,
-        lambda v: float(not bool(v))
+        _text_to_bool_not
     )
     VEHICLE_LOCK_STATUS = (
         "doorlockstatusvehicle",
@@ -131,24 +143,24 @@ class MbPromResRepr(Enum):
         "mb_gas_tank_lock_status",
         "Status of gas tank door lock",
         None,
-        lambda v: float(not bool(v))
+        _text_to_bool_not
     )
     VEHICLE_HEADING_POSITION = ("positionHeading", "mb_vehicle_heading_position", "Vehicle heading position", "degrees")
 
-    DECK_LID_STATUS = ("decklidstatus", "mb_deck_lid_open", "Deck lid latch status opened/closed state", None, bool)
-    DOOR_STATUS_FRONT_LEFT = ("doorstatusfrontleft", "mb_door_status_front_left", "Status of the front left door", None, bool)
-    DOOR_STATUS_FRONT_RIGHT = ("doorstatusfrontright", "mb_door_status_front_right", "Status of the front right door", None, bool)
-    DOOR_STATUS_REAR_LEFT = ("doorstatusrearleft", "mb_door_status_rear_left", "Status of the rear left door", None, bool)
-    DOOR_STATUS_REAR_RIGHT = ("doorstatusrearright", "mb_door_status_rear_right", "Status of the rear right door", None, bool)
-    INTERIOR_LIGHTS_FRONT = ("interiorLightsFront", "mb_interior_front_light_status", "Front light inside", None, bool)
-    INTERIOR_LIGHTS_REAR = ("interiorLightsRear", "mb_interior_rear_light_status", "Rear light inside", None, bool)
+    DECK_LID_STATUS = ("decklidstatus", "mb_deck_lid_open", "Deck lid latch status opened/closed state", None, _text_to_bool)
+    DOOR_STATUS_FRONT_LEFT = ("doorstatusfrontleft", "mb_door_status_front_left", "Status of the front left door", None, _text_to_bool)
+    DOOR_STATUS_FRONT_RIGHT = ("doorstatusfrontright", "mb_door_status_front_right", "Status of the front right door", None, _text_to_bool)
+    DOOR_STATUS_REAR_LEFT = ("doorstatusrearleft", "mb_door_status_rear_left", "Status of the rear left door", None, _text_to_bool)
+    DOOR_STATUS_REAR_RIGHT = ("doorstatusrearright", "mb_door_status_rear_right", "Status of the rear right door", None, _text_to_bool)
+    INTERIOR_LIGHTS_FRONT = ("interiorLightsFront", "mb_interior_front_light_status", "Front light inside", None, _text_to_bool)
+    INTERIOR_LIGHTS_REAR = ("interiorLightsRear", "mb_interior_rear_light_status", "Rear light inside", None, _text_to_bool)
     LIGHT_SWITCH_POSITION = (
         "lightswitchposition",
         "mb_light_switch_position",
         "Light switch position: 0: auto; 1: headlights; 2: sidelight left; 3: sidelight right; 4: parking light"
     )
-    READING_LAMP_FRONT_LEFT = ("readingLampFrontLeft", "mb_reading_lamp_front_left", "Front left reading light inside", None, bool)
-    READING_LAMP_FRONT_RIGHT = ("readingLampFrontRight", "mb_reading_lamp_front_right", "Front right reading light inside", None, bool)
+    READING_LAMP_FRONT_LEFT = ("readingLampFrontLeft", "mb_reading_lamp_front_left", "Front left reading light", None, _text_to_bool)
+    READING_LAMP_FRONT_RIGHT = ("readingLampFrontRight", "mb_reading_lamp_front_right", "Front right reading light", None, _text_to_bool)
     ROOF_TOP_STATUS = (
         "rooftopstatus",
         "mb_roof_top_status",
