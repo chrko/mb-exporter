@@ -254,6 +254,9 @@ class MbBaseVehicleApi(ABC):
                     else:
                         print(f"unexpected resource {key}")
 
+            for value in expected.values():
+                value.no_new_value(self.vin)
+
     async def refresh(self):
         resp = await self.request()
         if resp.status_code in (codes.OK, codes.NO_CONTENT, codes.TOO_MANY_REQUESTS):
