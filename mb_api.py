@@ -36,7 +36,7 @@ class MbCustomer(OAuth2Session):
 
         try:
             self.restore()
-        except FileNotFoundError:
+        except:
             pass
 
     def _update_token(self, token):
