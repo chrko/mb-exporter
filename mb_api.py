@@ -29,7 +29,7 @@ class MbCustomer(OAuth2Session):
             ],
             auto_refresh_url=self.TOKEN_URL,
             token_updater=self._update_token,
-            redirect_uri="http://localhost:8080/oauth.redirect"
+            redirect_uri="http://localhost:8080/oauth.redirect",
         )
         self.__client_secret = str(client_secret)
         self.__async_lock = asyncio.Lock()
@@ -61,6 +61,11 @@ class MbCustomer(OAuth2Session):
             client_secret=self.__client_secret,
             **kwargs
         )
+
+    def refresh_token(self, token_url, **kwargs):
+        kwargs["client_id"] = self.client_id
+        kwargs["client_secret"] = self.__client_secret
+        return super().refresh_token(token_url, **kwargs)
 
     def request(self, *args, **kwargs):
         if "timeout" not in kwargs:
