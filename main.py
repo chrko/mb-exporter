@@ -48,7 +48,8 @@ async def fetch_hybrid(_):
     yield
     my_hybrid.stop()
     try:
-        await my_hybrid.continuous_refresh_task
+        if my_hybrid.continuous_refresh_task:
+            await my_hybrid.continuous_refresh_task
     except CancelledError:
         pass
 
