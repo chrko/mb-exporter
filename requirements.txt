@@ -1,5 +1,6 @@
 aiohttp
 certifi
 oauthlib
+prometheus-client
 requests
 requests-oauthlib
