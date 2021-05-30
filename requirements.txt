@@ -1,4 +1,4 @@
-aiohttp
+aiohttp[speedups]
 certifi
 oauthlib
 prometheus-client

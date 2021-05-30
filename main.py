@@ -17,14 +17,19 @@ routes = web.RouteTableDef()
 
 @routes.get("/metrics")
 async def metrics(request: web.Request):
-    if not customer.authorized:
-        raise web.HTTPFound(customer.authorization_url()[0])
     encoder, content_type = choose_encoder(request.headers['accept'])
     output = encoder(prometheus_client.REGISTRY)
     return web.Response(
         body=output,
         headers={aiohttp.hdrs.CONTENT_TYPE: content_type},
     )
+
+
+@routes.get("/oauth.auth")
+async def auth(_: web.Request):
+    if not customer.authorized:
+        raise web.HTTPFound(customer.authorization_url()[0])
+    return web.Response(text="Authorized")
 
 
 @routes.get("/oauth.redirect")
