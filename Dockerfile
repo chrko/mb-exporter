@@ -11,5 +11,6 @@ RUN pip3 install -U pip setuptools wheel && \
 COPY . /mb-exporter/src
 
 USER mb-exporter
+ENV PYTHONUNBUFFERED=1
 
 CMD [ "python", "/mb-exporter/src/main.py" ]
