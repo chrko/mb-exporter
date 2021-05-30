@@ -52,4 +52,4 @@ app = web.Application()
 app.add_routes(routes)
 app.cleanup_ctx.append(fetch_hybrid)
 
-web.run_app(app)
+web.run_app(app, host="127.0.0.1")
