@@ -1,0 +1,10 @@
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+venv/
+
+.idea/
+
+config.py
+state.json
