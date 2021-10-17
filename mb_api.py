@@ -39,15 +39,15 @@ class MbCustomer(OAuth2Session):
 
         try:
             self.restore()
-        except:
-            logger.warning("Error during restoring the token on init", e)
+        except Exception as e:
+            logger.warning("Error during restoring the token on init: %s", e)
 
     def _update_token(self, token):
         self.token = token
         try:
             self.persist()
         except Exception as e:
-            logger.error("Error during persisting the updated token", e)
+            logger.error("Error during persisting the updated token: %s", e)
 
     def persist(self):
         with open("state.json", mode="w") as f:
