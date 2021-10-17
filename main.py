@@ -52,6 +52,7 @@ async def fetch_hybrid(_):
             await my_hybrid.continuous_refresh_task
     except CancelledError:
         pass
+    customer.persist()
 
 
 app = web.Application()

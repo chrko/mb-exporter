@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import math
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -10,6 +11,8 @@ from oauthlib.oauth2 import MismatchingStateError
 from prometheus_client import Gauge
 from requests import Response
 from requests_oauthlib import OAuth2Session
+
+logger = logging.getLogger(__name__)
 
 
 class MbCustomer(OAuth2Session):
@@ -37,10 +40,14 @@ class MbCustomer(OAuth2Session):
         try:
             self.restore()
         except:
-            pass
+            logger.warning("Error during restoring the token on init", e)
 
     def _update_token(self, token):
         self.token = token
+        try:
+            self.persist()
+        except Exception as e:
+            logger.error("Error during persisting the updated token", e)
 
     def persist(self):
         with open("state.json", mode="w") as f:
@@ -269,7 +276,7 @@ class MbBaseVehicleApi(ABC):
                         del expected[key]
                         break
                     else:
-                        print(f"unexpected resource {key}")
+                        logger.warning(f"unexpected resource {key}")
 
             for value in expected.values():
                 value.no_new_value(self.vin)
@@ -279,8 +286,7 @@ class MbBaseVehicleApi(ABC):
         if resp.status_code in (codes.OK, codes.NO_CONTENT, codes.TOO_MANY_REQUESTS):
             self.process_response(resp)
         else:
-            print(resp)
-            print(resp.text)
+            logger.error("Unexpected status code %d during requesting %s. Response text %s", resp.status_code, resp.request.url, resp.text)
 
     async def continuous_refresh(self):
         while True:
@@ -384,7 +390,7 @@ class MbHybridVehicle:
         self.continuous_refresh_task: Optional[asyncio.Task] = None
 
     async def refresh(self):
-        await asyncio.gather((api.continuous_refresh()) for api in self.apis)
+        await asyncio.gather((api.refresh()) for api in self.apis)
 
     async def continuous_refresh(self):
         await asyncio.gather(*[(api.continuous_refresh()) for api in self.apis])
