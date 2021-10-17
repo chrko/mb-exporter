@@ -33,7 +33,7 @@ async def auth(_: web.Request):
 
 
 @routes.get("/oauth.redirect")
-async def metrics(request: web.Request):
+async def redirect(request: web.Request):
     customer.fetch_token(**request.query)
     customer.persist()
 
