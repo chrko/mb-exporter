@@ -64,9 +64,7 @@ class MbCustomer(OAuth2Session):
         if "state" in kwargs and kwargs["state"] != self._state:
             raise MismatchingStateError()
         return super().fetch_token(
-            self.TOKEN_URL,
-            client_secret=self.__client_secret,
-            **kwargs
+            self.TOKEN_URL, client_secret=self.__client_secret, **kwargs
         )
 
     def refresh_token(self, token_url, **kwargs):
@@ -88,28 +86,28 @@ class MbCustomer(OAuth2Session):
             return await asyncio.to_thread(self.request, *args, **kwargs)
 
     async def get_async(self, url, **kwargs):
-        kwargs.setdefault('allow_redirects', True)
-        return await self.request_async('GET', url, **kwargs)
+        kwargs.setdefault("allow_redirects", True)
+        return await self.request_async("GET", url, **kwargs)
 
     async def options_async(self, url, **kwargs):
-        kwargs.setdefault('allow_redirects', True)
-        return await self.request_async('OPTIONS', url, **kwargs)
+        kwargs.setdefault("allow_redirects", True)
+        return await self.request_async("OPTIONS", url, **kwargs)
 
     async def head_async(self, url, **kwargs):
-        kwargs.setdefault('allow_redirects', False)
-        return await self.request_async('HEAD', url, **kwargs)
+        kwargs.setdefault("allow_redirects", False)
+        return await self.request_async("HEAD", url, **kwargs)
 
     async def post_async(self, url, data=None, json=None, **kwargs):
-        return await self.request_async('POST', url, data=data, json=json, **kwargs)
+        return await self.request_async("POST", url, data=data, json=json, **kwargs)
 
     async def put_async(self, url, data=None, **kwargs):
-        return await self.request_async('PUT', url, data=data, **kwargs)
+        return await self.request_async("PUT", url, data=data, **kwargs)
 
     async def patch_async(self, url, data=None, **kwargs):
-        return await self.request_async('PATCH', url, data=data, **kwargs)
+        return await self.request_async("PATCH", url, data=data, **kwargs)
 
     async def delete_async(self, url, **kwargs):
-        return await self.request_async('DELETE', url, **kwargs)
+        return await self.request_async("DELETE", url, **kwargs)
 
 
 def _kilometers_to_meters(val):
@@ -125,11 +123,31 @@ def _text_to_bool_not(val: str):
 
 
 class MbPromResRepr(Enum):
-    STATE_OF_CHARGE = ("soc", "mb_electric_state_of_charge", "State of Charge obtained from electric vehicle api")
-    ELECTRIC_RANGE = ("rangeelectric", "mb_electric_range", "Electric range in kilometers", "meters", _kilometers_to_meters)
+    STATE_OF_CHARGE = (
+        "soc",
+        "mb_electric_state_of_charge",
+        "State of Charge obtained from electric vehicle api",
+    )
+    ELECTRIC_RANGE = (
+        "rangeelectric",
+        "mb_electric_range",
+        "Electric range in kilometers",
+        "meters",
+        _kilometers_to_meters,
+    )
 
-    LIQUID_FUEL_LEVEL = ("tanklevelpercent", "mb_liquid_fuel_level", "Liquid fuel level")
-    LIQUID_RANGE = ("rangeliquid", "mb_liquid_range", "Liquid range", "meters", _kilometers_to_meters)
+    LIQUID_FUEL_LEVEL = (
+        "tanklevelpercent",
+        "mb_liquid_fuel_level",
+        "Liquid fuel level",
+    )
+    LIQUID_RANGE = (
+        "rangeliquid",
+        "mb_liquid_range",
+        "Liquid range",
+        "meters",
+        _kilometers_to_meters,
+    )
 
     ODOMETER = ("odo", "mb_odometer", "Odometer", "meters", _kilometers_to_meters)
 
@@ -138,40 +156,99 @@ class MbPromResRepr(Enum):
         "mb_deck_lid_lock_status",
         "Deck lid (Kofferraum) lock status",
         None,
-        _text_to_bool_not
+        _text_to_bool_not,
     )
     VEHICLE_LOCK_STATUS = (
         "doorlockstatusvehicle",
         "mb_vehicle_lock_status",
-        "Vehicle lock status, 0: vehicle unlocked, 1: vehicle internal locked, 2: vehicle external locked, 3: vehicle selective unlocked"
+        "Vehicle lock status, 0: vehicle unlocked, 1: vehicle internal locked, 2: vehicle external locked, 3: vehicle selective unlocked",
     )
     GAS_TANK_LOCK_STATUS = (
         "doorlockstatusgas",
         "mb_gas_tank_lock_status",
         "Status of gas tank door lock",
         None,
-        _text_to_bool_not
+        _text_to_bool_not,
     )
-    VEHICLE_HEADING_POSITION = ("positionHeading", "mb_vehicle_heading_position", "Vehicle heading position", "degrees")
+    VEHICLE_HEADING_POSITION = (
+        "positionHeading",
+        "mb_vehicle_heading_position",
+        "Vehicle heading position",
+        "degrees",
+    )
 
-    DECK_LID_STATUS = ("decklidstatus", "mb_deck_lid_open", "Deck lid latch status opened/closed state", None, _text_to_bool)
-    DOOR_STATUS_FRONT_LEFT = ("doorstatusfrontleft", "mb_door_status_front_left", "Status of the front left door", None, _text_to_bool)
-    DOOR_STATUS_FRONT_RIGHT = ("doorstatusfrontright", "mb_door_status_front_right", "Status of the front right door", None, _text_to_bool)
-    DOOR_STATUS_REAR_LEFT = ("doorstatusrearleft", "mb_door_status_rear_left", "Status of the rear left door", None, _text_to_bool)
-    DOOR_STATUS_REAR_RIGHT = ("doorstatusrearright", "mb_door_status_rear_right", "Status of the rear right door", None, _text_to_bool)
-    INTERIOR_LIGHTS_FRONT = ("interiorLightsFront", "mb_interior_front_light_status", "Front light inside", None, _text_to_bool)
-    INTERIOR_LIGHTS_REAR = ("interiorLightsRear", "mb_interior_rear_light_status", "Rear light inside", None, _text_to_bool)
+    DECK_LID_STATUS = (
+        "decklidstatus",
+        "mb_deck_lid_open",
+        "Deck lid latch status opened/closed state",
+        None,
+        _text_to_bool,
+    )
+    DOOR_STATUS_FRONT_LEFT = (
+        "doorstatusfrontleft",
+        "mb_door_status_front_left",
+        "Status of the front left door",
+        None,
+        _text_to_bool,
+    )
+    DOOR_STATUS_FRONT_RIGHT = (
+        "doorstatusfrontright",
+        "mb_door_status_front_right",
+        "Status of the front right door",
+        None,
+        _text_to_bool,
+    )
+    DOOR_STATUS_REAR_LEFT = (
+        "doorstatusrearleft",
+        "mb_door_status_rear_left",
+        "Status of the rear left door",
+        None,
+        _text_to_bool,
+    )
+    DOOR_STATUS_REAR_RIGHT = (
+        "doorstatusrearright",
+        "mb_door_status_rear_right",
+        "Status of the rear right door",
+        None,
+        _text_to_bool,
+    )
+    INTERIOR_LIGHTS_FRONT = (
+        "interiorLightsFront",
+        "mb_interior_front_light_status",
+        "Front light inside",
+        None,
+        _text_to_bool,
+    )
+    INTERIOR_LIGHTS_REAR = (
+        "interiorLightsRear",
+        "mb_interior_rear_light_status",
+        "Rear light inside",
+        None,
+        _text_to_bool,
+    )
     LIGHT_SWITCH_POSITION = (
         "lightswitchposition",
         "mb_light_switch_position",
-        "Light switch position: 0: auto; 1: headlights; 2: sidelight left; 3: sidelight right; 4: parking light"
+        "Light switch position: 0: auto; 1: headlights; 2: sidelight left; 3: sidelight right; 4: parking light",
     )
-    READING_LAMP_FRONT_LEFT = ("readingLampFrontLeft", "mb_reading_lamp_front_left", "Front left reading light", None, _text_to_bool)
-    READING_LAMP_FRONT_RIGHT = ("readingLampFrontRight", "mb_reading_lamp_front_right", "Front right reading light", None, _text_to_bool)
+    READING_LAMP_FRONT_LEFT = (
+        "readingLampFrontLeft",
+        "mb_reading_lamp_front_left",
+        "Front left reading light",
+        None,
+        _text_to_bool,
+    )
+    READING_LAMP_FRONT_RIGHT = (
+        "readingLampFrontRight",
+        "mb_reading_lamp_front_right",
+        "Front right reading light",
+        None,
+        _text_to_bool,
+    )
     ROOF_TOP_STATUS = (
         "rooftopstatus",
         "mb_roof_top_status",
-        "Status of the convertible top opened/closed: 0: unlocked; 1: open and locked; 2: closed and locked"
+        "Status of the convertible top opened/closed: 0: unlocked; 1: open and locked; 2: closed and locked",
     )
     SUN_ROOF_STATUS = (
         "sunroofstatus",
@@ -183,7 +260,7 @@ class MbPromResRepr(Enum):
         "3: Tilt/slide sunroof is running; "
         "4: Tilt/slide sunroof in anti-booming position; "
         "5: Sliding roof in intermediate position;"
-        "6: Lifting roof in intermediate position"
+        "6: Lifting roof in intermediate position",
     )
     WINDOW_STATUS_FRONT_LEFT = (
         "windowstatusfrontleft",
@@ -194,7 +271,7 @@ class MbPromResRepr(Enum):
         "2: window completely closed; "
         "3: window airing position; "
         "4: window intermediate airing position; "
-        "5: window currently running"
+        "5: window currently running",
     )
     WINDOW_STATUS_FRONT_RIGHT = (
         "windowstatusfrontright",
@@ -205,7 +282,7 @@ class MbPromResRepr(Enum):
         "2: window completely closed; "
         "3: window airing position; "
         "4: window intermediate airing position; "
-        "5: window currently running"
+        "5: window currently running",
     )
     WINDOW_STATUS_REAR_LEFT = (
         "windowstatusrearleft",
@@ -216,7 +293,7 @@ class MbPromResRepr(Enum):
         "2: window completely closed; "
         "3: window airing position; "
         "4: window intermediate airing position; "
-        "5: window currently running"
+        "5: window currently running",
     )
     WINDOW_STATUS_REAR_RIGHT = (
         "windowstatusrearright",
@@ -227,10 +304,17 @@ class MbPromResRepr(Enum):
         "2: window completely closed; "
         "3: window airing position; "
         "4: window intermediate airing position; "
-        "5: window currently running"
+        "5: window currently running",
     )
 
-    def __init__(self, resource_name: str, metric_base_name: str, help_text: str, unit_name: Optional[str] = None, value_mapper=None):
+    def __init__(
+        self,
+        resource_name: str,
+        metric_base_name: str,
+        help_text: str,
+        unit_name: Optional[str] = None,
+        value_mapper=None,
+    ):
         self.resource_name = resource_name
 
         metric_name = metric_base_name
@@ -238,8 +322,16 @@ class MbPromResRepr(Enum):
             metric_name += "_" + unit_name
 
         self.__metric = Gauge(metric_name, help_text, ["vin"])
-        self.__measurement_time = Gauge(f"{metric_base_name}_measurement_time_seconds", f"Measurement time of {metric_name}", ["vin"])
-        self.__update_time = Gauge(f"{metric_base_name}_update_time_seconds", f"Update time of {metric_name}", ["vin"])
+        self.__measurement_time = Gauge(
+            f"{metric_base_name}_measurement_time_seconds",
+            f"Measurement time of {metric_name}",
+            ["vin"],
+        )
+        self.__update_time = Gauge(
+            f"{metric_base_name}_update_time_seconds",
+            f"Update time of {metric_name}",
+            ["vin"],
+        )
         self.__value_mapper = value_mapper or float
 
     def new_value(self, vin: str, data: dict):
@@ -252,7 +344,13 @@ class MbPromResRepr(Enum):
 
 
 class MbBaseVehicleApi(ABC):
-    def __init__(self, mb_customer: MbCustomer, vin: str, calls_per_hour: float, expected_resources: set):
+    def __init__(
+        self,
+        mb_customer: MbCustomer,
+        vin: str,
+        calls_per_hour: float,
+        expected_resources: set,
+    ):
         self.mb_customer = mb_customer
         self.vin = str(vin)
         self._calls_per_hour = float(calls_per_hour)
@@ -286,7 +384,12 @@ class MbBaseVehicleApi(ABC):
         if resp.status_code in (codes.OK, codes.NO_CONTENT, codes.TOO_MANY_REQUESTS):
             self.process_response(resp)
         else:
-            logger.error("Unexpected status code %d during requesting %s. Response text %s", resp.status_code, resp.request.url, resp.text)
+            logger.error(
+                "Unexpected status code %d during requesting %s. Response text %s",
+                resp.status_code,
+                resp.request.url,
+                resp.text,
+            )
 
     async def continuous_refresh(self):
         while True:
@@ -296,7 +399,12 @@ class MbBaseVehicleApi(ABC):
 
 class MbElectricVehicleStatus(MbBaseVehicleApi):
     def __init__(self, mb_customer: MbCustomer, vin: str):
-        super().__init__(mb_customer, vin, 2, {MbPromResRepr.ELECTRIC_RANGE, MbPromResRepr.STATE_OF_CHARGE})
+        super().__init__(
+            mb_customer,
+            vin,
+            2,
+            {MbPromResRepr.ELECTRIC_RANGE, MbPromResRepr.STATE_OF_CHARGE},
+        )
 
     async def request(self) -> Response:
         return await self.mb_customer.get_async(
@@ -306,10 +414,17 @@ class MbElectricVehicleStatus(MbBaseVehicleApi):
 
 class MbFuelStatus(MbBaseVehicleApi):
     def __init__(self, mb_customer: MbCustomer, vin: str):
-        super().__init__(mb_customer, vin, 1, {MbPromResRepr.LIQUID_FUEL_LEVEL, MbPromResRepr.LIQUID_RANGE})
+        super().__init__(
+            mb_customer,
+            vin,
+            1,
+            {MbPromResRepr.LIQUID_FUEL_LEVEL, MbPromResRepr.LIQUID_RANGE},
+        )
 
     async def request(self) -> Response:
-        return await self.mb_customer.get_async(f"https://api.mercedes-benz.com/vehicledata/v2/vehicles/{self.vin}/containers/fuelstatus")
+        return await self.mb_customer.get_async(
+            f"https://api.mercedes-benz.com/vehicledata/v2/vehicles/{self.vin}/containers/fuelstatus"
+        )
 
 
 class MbOdometerStatus(MbBaseVehicleApi):
@@ -333,7 +448,7 @@ class MbVehicleLockStatus(MbBaseVehicleApi):
                 MbPromResRepr.VEHICLE_LOCK_STATUS,
                 MbPromResRepr.GAS_TANK_LOCK_STATUS,
                 MbPromResRepr.VEHICLE_HEADING_POSITION,
-            }
+            },
         )
 
     async def request(self) -> Response:
@@ -365,7 +480,7 @@ class MbVehicleStatus(MbBaseVehicleApi):
                 MbPromResRepr.WINDOW_STATUS_FRONT_RIGHT,
                 MbPromResRepr.WINDOW_STATUS_REAR_LEFT,
                 MbPromResRepr.WINDOW_STATUS_REAR_RIGHT,
-            }
+            },
         )
 
     async def request(self) -> Response:
@@ -396,14 +511,25 @@ class MbHybridVehicle:
         await asyncio.gather(*[(api.continuous_refresh()) for api in self.apis])
 
     def start(self):
-        if self.continuous_refresh_task and not self.continuous_refresh_task.cancelled():
+        if (
+            self.continuous_refresh_task
+            and not self.continuous_refresh_task.cancelled()
+        ):
             return
         if self.mb_customer.authorized:
-            self.continuous_refresh_task = asyncio.create_task(self.continuous_refresh())
+            self.continuous_refresh_task = asyncio.create_task(
+                self.continuous_refresh()
+            )
 
     def stop(self):
-        if self.continuous_refresh_task and not self.continuous_refresh_task.cancelled():
+        if (
+            self.continuous_refresh_task
+            and not self.continuous_refresh_task.cancelled()
+        ):
             self.continuous_refresh_task.cancel()
 
     def running(self) -> bool:
-        return self.continuous_refresh_task and not (self.continuous_refresh_task.done() or self.continuous_refresh_task.cancelled())
+        return self.continuous_refresh_task and not (
+            self.continuous_refresh_task.done()
+            or self.continuous_refresh_task.cancelled()
+        )

@@ -17,7 +17,7 @@ routes = web.RouteTableDef()
 
 @routes.get("/metrics")
 async def metrics(request: web.Request):
-    encoder, content_type = choose_encoder(request.headers['accept'])
+    encoder, content_type = choose_encoder(request.headers["accept"])
     output = encoder(prometheus_client.REGISTRY)
     return web.Response(
         body=output,
