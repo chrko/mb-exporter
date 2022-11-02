@@ -403,7 +403,7 @@ class MbElectricVehicleStatus(MbBaseVehicleApi):
         super().__init__(
             mb_customer,
             vin,
-            2,
+            30,
             {MbPromResRepr.ELECTRIC_RANGE, MbPromResRepr.STATE_OF_CHARGE},
         )
 
