@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class MbCustomer(OAuth2Session):
-    AUTHORIZATION_URL = "https://id.mercedes-benz.com/as/authorization.oauth2"
-    TOKEN_URL = "https://id.mercedes-benz.com/as/token.oauth2"
+    AUTHORIZATION_URL = "https://ssoalpha.dvb.corpinter.net/v1/auth"
+    TOKEN_URL = "https://ssoalpha.dvb.corpinter.net/v1/token"
 
     def __init__(self, client_id: str, client_secret: str):
         super().__init__(
