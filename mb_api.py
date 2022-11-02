@@ -23,6 +23,7 @@ class MbCustomer(OAuth2Session):
         super().__init__(
             client_id=client_id,
             scope=[
+                "openid",
                 "offline_access",
                 "mb:vehicle:mbdata:evstatus",
                 "mb:vehicle:mbdata:fuelstatus",
