@@ -1,6 +1,0 @@
-aiohttp[speedups]
-certifi
-oauthlib
-prometheus-client
-requests
-requests-oauthlib

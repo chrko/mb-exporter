@@ -1,14 +1,14 @@
 FROM python:3.9-buster
 
 RUN useradd -ms /bin/bash -d /mb-exporter -u 8999 -U mb-exporter
+RUN pip3 install -U pip setuptools wheel pipenv
 
-WORKDIR /mb-exporter
-
-COPY requirements.txt /mb-exporter/src/
-RUN pip3 install -U pip setuptools wheel && \
-    pip3 install --no-cache-dir -r /mb-exporter/src/requirements.txt
+WORKDIR /mb-exporter/src
+COPY Pipfile* /mb-exporter/src/
+RUN pipenv sync --system
 
 COPY . /mb-exporter/src
+WORKDIR /mb-exporter
 
 USER mb-exporter
 ENV PYTHONUNBUFFERED=1
