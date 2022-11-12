@@ -395,7 +395,7 @@ class MbBaseVehicleApi(ABC):
     async def continuous_refresh(self):
         while True:
             await self.refresh()
-            await asyncio.sleep(math.ceil(3600 / self._calls_per_hour))
+            await asyncio.sleep(math.ceil(3600 / self._calls_per_hour) + 1)
 
 
 class MbElectricVehicleStatus(MbBaseVehicleApi):
