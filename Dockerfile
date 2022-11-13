@@ -1,4 +1,4 @@
-FROM python:3.9-buster
+FROM python:3.9
 
 RUN useradd -ms /bin/bash -d /mb-exporter -u 8999 -U mb-exporter
 RUN pip3 install -U pip setuptools wheel pipenv
