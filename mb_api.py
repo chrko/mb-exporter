@@ -350,7 +350,7 @@ class MbBaseVehicleApi(ABC):
         mb_customer: MbCustomer,
         vin: str,
         calls_per_hour: float,
-        expected_resources: set,
+        expected_resources: set[MbPromResRepr],
     ):
         self.mb_customer = mb_customer
         self.vin = str(vin)
@@ -434,8 +434,16 @@ class MbOdometerStatus(MbBaseVehicleApi):
 
     async def request(self) -> Response:
         return await self.mb_customer.get_async(
-            f"https://api.mercedes-benz.com/vehicledata/v2/vehicles/{self.vin}/containers/payasyoudrive"
+            f"https://api.mercedes-benz.com/vehicledata/v2/vehicles/{self.vin}/resources/odo"
         )
+
+    def process_response(self, resp: Response):
+        odometer_resource = self.expected_resources.pop()
+        if resp.status_code == codes.NO_CONTENT:
+            odometer_resource.no_new_value(self.vin)
+        elif resp.status_code == codes.OK:
+            data = resp.json()
+            odometer_resource.new_value(self.vin, data["odo"])
 
 
 class MbVehicleLockStatus(MbBaseVehicleApi):
