@@ -430,7 +430,8 @@ class MbFuelStatus(MbBaseVehicleApi):
 
 class MbOdometerStatus(MbBaseVehicleApi):
     def __init__(self, mb_customer: MbCustomer, vin: str):
-        super().__init__(mb_customer, vin, 1, {MbPromResRepr.ODOMETER})
+        super().__init__(mb_customer, vin, 1, set())
+        self._odometer = MbPromResRepr.ODOMETER
 
     async def request(self) -> Response:
         return await self.mb_customer.get_async(
@@ -438,12 +439,11 @@ class MbOdometerStatus(MbBaseVehicleApi):
         )
 
     def process_response(self, resp: Response):
-        odometer_resource = self.expected_resources.pop()
         if resp.status_code == codes.NO_CONTENT:
-            odometer_resource.no_new_value(self.vin)
+            self._odometer.no_new_value(self.vin)
         elif resp.status_code == codes.OK:
             data = resp.json()
-            odometer_resource.new_value(self.vin, data["odo"])
+            self._odometer.new_value(self.vin, data["odo"])
 
 
 class MbVehicleLockStatus(MbBaseVehicleApi):
